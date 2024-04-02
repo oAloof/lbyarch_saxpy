@@ -45,7 +45,7 @@ int main() {
     */
     
     // ***** Actual Code *****
-    int powers[3]; // Array to hold the three powers
+    int powers[3] = {0}; // Array to hold the three powers
     float A;
     int n;
 
@@ -101,7 +101,6 @@ int main() {
         printf("2^%d elements: Size = %d, Time = %f seconds\n", powers[s], n, time_spentASM);
         printFirstTen(Z);
         
-
         free(X);
         free(Y);
         free(Z);

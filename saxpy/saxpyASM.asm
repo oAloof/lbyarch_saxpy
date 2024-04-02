@@ -11,11 +11,11 @@ saxpyASM:
 	;RCX:X, RDX:Y, R8:Z, XMM3:A, RBP+32 = N
 
 	;to fix extra inputs
-	;push rsi
+	push rsi
 	push rbp
 	mov rbp, rsp
 	add rbp, 16
-	;add rbp, 8
+	add rbp, 8
 	
 	;clear rax
 	xor rax, rax
@@ -25,7 +25,7 @@ saxpyASM:
 
 
 loop_start: 
-	cmp rax,rsi
+	cmp rax, rsi
 	je loop_end
 
 	;load element
@@ -45,7 +45,7 @@ loop_start:
 
 loop_end:
 	pop rbp
-	;pop rsi
+	pop rsi
 	ret
 
 
