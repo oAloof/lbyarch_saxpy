@@ -1,9 +1,11 @@
+// Tyrone Uy, Kendrick Pua, S12
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <time.h>
 
-extern void saxpyASM(int n, float A, float* X, float* Y, float* Z);
+extern void saxpyASM(float* X, float* Y, float* Z, float A, int n);
 
 void saxpy(int n, float A, float* X, float* Y, float* Z) {
     for (int i = 0; i < n; i++) {
@@ -76,6 +78,7 @@ int main() {
         }
 
         // Timing the SAXPY kernel
+        printf("----- C Version -----\n");
         clock_t start = clock();
         for (int i = 0; i < 30; i++) { // Run 30 times
             saxpy(n, A, X, Y, Z); // Change function call based on if using C version or ASM version
@@ -85,6 +88,19 @@ int main() {
 
         printf("2^%d elements: Size = %d, Time = %f seconds\n", powers[s], n, time_spent);
         printFirstTen(Z);
+
+        
+        printf("----- ASM Version -----\n");
+        clock_t startASM = clock();
+        for (int i = 0; i < 30; i++) { // Run 30 times
+            saxpyASM(X, Y, Z, A, n); // Change function call based on if using C version or ASM version
+        }
+        clock_t endASM = clock();
+        double time_spentASM = (double)(endASM - startASM) / CLOCKS_PER_SEC / 30.0; // Average excution time of 30 runs
+
+        printf("2^%d elements: Size = %d, Time = %f seconds\n", powers[s], n, time_spentASM);
+        printFirstTen(Z);
+        
 
         free(X);
         free(Y);

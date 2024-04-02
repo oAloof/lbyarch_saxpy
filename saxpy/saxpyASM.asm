@@ -1,29 +1,51 @@
-; Assembly version of SAXPY
+; Tyrone Uy, Kendrick Pua, S12
 
 section .text
 bits 64
 default rel
 
 global saxpyASM
+extern printf
 
 saxpyASM:
-    ; Input: RCX = n, XMM0 = A, RDX = X, R8 = Y, R9 = Z
-    xor rax, rax  ; clear RAX to use as loop counter
+	;RCX:X, RDX:Y, R8:Z, XMM3:A, RBP+32 = N
 
-loop_start:
-    cmp rax, rcx       ; Compare loop counter with n (end of array)
-    jge loop_end       
+	;to fix extra inputs
+	;push rsi
+	push rbp
+	mov rbp, rsp
+	add rbp, 16
+	;add rbp, 8
+	
+	;clear rax
+	xor rax, rax
 
-    ; Load the current element from X and Y, multiply X[i] by A and add Y[i]
-    movss xmm1, [rdx + rax * 4]  ; Load X[i] into xmm1
-    mulss xmm1, xmm0             ; xmm1 = xmm1 * A
-    addss xmm1, [r8 + rax * 4]   ; xmm1 = xmm1 + Y[i]
+	;to get n
+	mov esi, [rbp+32]
 
-    ; Store the result in Z[i]
-    movss [r9 + rax * 4], xmm1   ; Store xmm1 into Z[i]
 
-    inc rax                      ; Increment loop counter
-    jmp loop_start               
+loop_start: 
+	cmp rax,rsi
+	je loop_end
+
+	;load element
+	movss xmm1, [rcx+rax*4]
+
+	;multiply
+	mulss xmm1, xmm3
+
+	;add
+	addss xmm1, [rdx+rax*4]
+
+	;store value in Z
+	movss [r8+rax*4], xmm1
+	
+	inc rax
+	jmp loop_start
 
 loop_end:
-    ret
+	pop rbp
+	;pop rsi
+	ret
+
+
